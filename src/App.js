@@ -35,27 +35,23 @@ class App extends Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    // ! Get your own API key ! 
+    // ! Get your own API key !
     const apikey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY
+
     // Get the zip from the input
-    // console.log('here', e)
     const { inputValue: zip } = this.state;
-    console.log(this.state)
-    console.log(zip)
+
     // Form an API request URL with the apikey and zip
-    // console.log(this.state.inputValue)
     const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apikey}&units=imperial`;
+
     // Get data from the API with fetch
-    // var weatherComponent = New Weather
     fetch(url).then(res => {
       // Handle the response stream as JSON
       return res.json()
     }).then((json) => {
       // If the request was successful assign the data to component state
       this.setState({ weatherData: json })
-      // this.weatherData = json
-      // let weatherComponent = Weather(json)
-      // console.log(this.weatherData)
+
       // ! This needs better error checking here or at renderWeather() 
       // It's possible to get a valid JSON response that is not weather 
       // data, for example when a bad zip code entered.
@@ -72,7 +68,6 @@ class App extends Component {
   renderWeather() {
     const { weatherData } = this.state;
     // const weatherData= this.weatherData;
-    console.log(this.weatherData)
 
     // This method returns undefined or a JSX component
     if (weatherData === null) {
@@ -94,6 +89,7 @@ class App extends Component {
         <div>
           <Title />
         </div>
+        {/* controlled component pattern */}
 
         {/** Conditionally render this component */}
         {this.renderWeather()}
