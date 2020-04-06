@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import Weather from './Weather.js'
 import './App.css';
+import ErrorMessage from './ErrorMessage';
+import Title from './Title';
 
 /** 
  * This example illustrates a simple react project 
@@ -25,9 +27,10 @@ class App extends Component {
     super(props)
 
     this.state = {
-      inputValue: '94010',     // Used to hold value entered in the input field
+      inputValue: '',     // Used to hold value entered in the input field
       weatherData: null,  // Used to hold data loaded from the weather API
-    }
+    };
+    // this.weatherData = null
   }
 
   handleSubmit(e) {
@@ -35,9 +38,13 @@ class App extends Component {
     // ! Get your own API key ! 
     const apikey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY
     // Get the zip from the input
-    const zip = this.state.inputValue
+    // console.log('here', e)
+    const { inputValue: zip } = this.state;
+    console.log(this.state)
+    console.log(zip)
     // Form an API request URL with the apikey and zip
-    const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apikey}`;
+    // console.log(this.state.inputValue)
+    const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apikey}&units=imperial`;
     // Get data from the API with fetch
     // var weatherComponent = New Weather
     fetch(url).then(res => {
@@ -46,8 +53,9 @@ class App extends Component {
     }).then((json) => {
       // If the request was successful assign the data to component state
       this.setState({ weatherData: json })
+      // this.weatherData = json
       // let weatherComponent = Weather(json)
-      // console.log(weatherComponent)
+      // console.log(this.weatherData)
       // ! This needs better error checking here or at renderWeather() 
       // It's possible to get a valid JSON response that is not weather 
       // data, for example when a bad zip code entered.
@@ -63,10 +71,17 @@ class App extends Component {
 
   renderWeather() {
     const { weatherData } = this.state;
+    // const weatherData= this.weatherData;
+    console.log(this.weatherData)
+
     // This method returns undefined or a JSX component
     if (weatherData === null) {
       // If there is no data return undefined
       return undefined
+    }
+
+    if (weatherData.cod === '404' || weatherData.cod === '400') {
+      return <ErrorMessage message={weatherData.message} />;
     }
 
     return <Weather weatherData={weatherData} />;
@@ -76,6 +91,12 @@ class App extends Component {
     const { inputValue } = this.state;
     return (
       <div className="App">
+        <div>
+          <Title />
+        </div>
+
+        {/** Conditionally render this component */}
+        {this.renderWeather()}
 
         {/** This input uses the controlled component pattern */}
         <form onSubmit={e => this.handleSubmit(e)}>
@@ -97,8 +118,7 @@ class App extends Component {
 
         </form>
 
-        {/** Conditionally render this component */}
-        {this.renderWeather()}
+
 
       </div>
     );

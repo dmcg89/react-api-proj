@@ -2,16 +2,22 @@ import React, { Component } from 'react';
 class Weather extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            weatherData: props.weatherData,
-        }
+            this.weatherData = props.weatherData
+        // this.state = {
+        //     weatherData: props.weatherData,
+        // }
     }
-
     render() {
-        const { main, description } = this.state.weatherData.weather[0];
-        const { temp, pressure, humidity, temp_min, temp_max } = this.state.weatherData.main;
-        const { speed, deg } = this.state.weatherData.wind
+        console.log('here')
+        console.log(this.weatherData)
+        // const { main, description } = this.state.weatherData.weather[0];
+        // const { temp, pressure, humidity, temp_min, temp_max } = this.state.weatherData.main;
+        // const { speed, deg } = this.state.weatherData.wind
+        const { main, description } = this.weatherData.weather[0];
+        const { temp, pressure, humidity, temp_min, temp_max } = this.weatherData.main;
+        const { speed, deg } = this.weatherData.wind
+        const town  = this.weatherData.name
+        console.log(this.weatherData.name)
     // const { weatherData } = props;
 
         return (
@@ -25,6 +31,7 @@ class Weather extends Component {
             <div className="weather"><span className="bold">Humidity: </span>  {humidity} %</div>
             <div className="weather"><span className="bold">Wind Speed: </span>  {speed} mph</div>
             <div className="weather"><span className="bold"> Wind Direction:  </span>  {deg} deg</div>
+            <div className="weather"><span className="bold"> City:  </span>  {town}</div>
         
             </div>
         );
